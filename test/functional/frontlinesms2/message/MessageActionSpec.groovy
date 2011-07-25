@@ -4,6 +4,11 @@ import frontlinesms2.*
 import frontlinesms2.enums.MessageStatus
 
 class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
+	def setup() {
+		
+	}
+
+
 	def 'message actions menu is displayed for all individual messages'() {
 		given:
 			createTestPolls()
@@ -20,12 +25,8 @@ class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
 			def inboxActions = $('#message-actions').children()*.text()
 		then:
 			inboxActions[1] == "Football Teams"
-
-		cleanup:
-			deleteTestPolls()
-			deleteTestFolders()
-			deleteTestMessages()
 	}
+
 	
 	def 'clicking on poll moves the message to that poll and removes it from the previous poll or inbox'() {
 		given:
@@ -54,9 +55,6 @@ class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
 		then:
 			jill != Fmessage.getInboxMessages(false).find { it == jill }
 			jill == Poll.findByTitle("Football Teams").getMessages(false).find { it == jill }
-		cleanup:
-			deleteTestMessages()
-			deleteTestPolls()
 	}
 
 	def 'messages are always added to the UNKNOWN response of a poll'() {
@@ -76,9 +74,6 @@ class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
 			Fmessage.findAll().each { it.refresh() }
 		then:
 			bob.messageOwner == unknownResponse
-		cleanup:
-			deleteTestMessages()
-			deleteTestPolls()
 	}
 
 	def 'possible poll responses are shown in action list and can be clicked to reassign a message to a different response'() {
@@ -100,9 +95,6 @@ class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
 			bob.refresh()
 		then:
 			bob.messageOwner == barceResponse
-		cleanup:
-			deleteTestPolls()
-			deleteTestMessages()
 	}
 	
 	def 'clicking on folder moves the message to that folder and removes it from the previous location'() {
@@ -124,10 +116,6 @@ class MessageActionSpec extends frontlinesms2.poll.PollGebSpec {
 		then:
 			max != footballPoll.getMessages(false).find { it == max }
 			max == workFolder.getFolderMessages(false).find { it == max }
-		cleanup:
-			deleteTestFolders()
-			deleteTestPolls()
-			deleteTestMessages()	
 	}
 }
 
